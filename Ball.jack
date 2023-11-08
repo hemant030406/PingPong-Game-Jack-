@@ -56,7 +56,7 @@ class Ball{
     }
 
 
-    method void drwaScoreboard(){
+    method void drawScoreboard(){
         do Output.printString("Player1: ");
 
         do Output.moveCursor(0,50);
@@ -64,6 +64,29 @@ class Ball{
 
         do Screen.setColor(true);
         do Screen.drawLine(0,15,511,15);
+        
+        do incScore(0,9,0);
+        do incScore(0,59,0);
+
+        do Output.moveCursor(0,20);
+        do Output.printString("Each Player has 5 Lives");
+
+        do Output.moveCursor(2,20);
+        do Output.printString("Press Space to Start");
+
+        do Output.moveCursor(4,20);
+        do Output.printString("Press p to Pause");
+
+        do Output.moveCursor(6,20);
+        do Output.printString("Press r to Resume");
+
+        do Output.moveCursor(8,20);
+        do Output.printString("Press q to Quit");
+
+        do Sys.wait(6000);
+        do Screen.setColor(false);
+        do Screen.drawRectangle(160,0,345,14);
+        do Screen.drawRectangle(160,22,320,100);
 
         return;
     }
@@ -107,33 +130,32 @@ class Ball{
 
         return;
     }
+    
+    method void dispose() {
+      do userSlider.dispose();
+      do AISlider.dispose();
+      do Memory.deAlloc(this);
+      return;
+    }
 
     method void run(){
 
         var int key,count;
-        var boolean pause,move;
+        var boolean pause,move,exit;
         let pause = false;
         let move = false;
+        let exit = false;
 
-        do drwaScoreboard();
+        do drawScoreboard();
 
-
-        while(true){
+        while(~exit){
 
             let count = 0;
-
-                while(key=0){
-                    let key = Keyboard.keyPressed();
-                }
-
-                if (key=32) {
-                    let move = true;
-                }
-
 
             while(~pause) {
 
                 let key = Keyboard.keyPressed();
+
                 if (key = 32){
                     let move = true;
                 }
@@ -165,6 +187,7 @@ class Ball{
                             do incScore(0,9,score1);
                             let move = false;
                         }
+
                         else{
                             let vx=-vx;
                         }
@@ -239,6 +262,11 @@ class Ball{
 
                     do Sys.wait(15);
 
+                    if ((score1 = 5) | (score2 = 5)){
+                        let pause = true;
+                        let exit = true;
+                    }
+
                 }
             }
 
@@ -246,6 +274,9 @@ class Ball{
 
             if(key = 82){
                 let pause = false;
+            }
+            if (key = 81){
+                let exit = true;
             }
         }
 
